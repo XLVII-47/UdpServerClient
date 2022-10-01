@@ -16,7 +16,7 @@ class UdpServer : public QObject
 public:
 
 
-    explicit UdpServer(QObject *parent = nullptr);
+    explicit UdpServer(int part,QObject *parent = nullptr);
     std::string mapKey(QHostAddress ha,int port);
 
 signals:

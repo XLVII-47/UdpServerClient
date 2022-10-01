@@ -5,15 +5,15 @@
 #include <QtConcurrent>
 #include "udpserver.h"
 
-UdpServer::UdpServer(QObject *parent)
+UdpServer::UdpServer(int port,QObject *parent)
     : QObject{parent}
 {
     m_socket = new QUdpSocket(this);
-    m_socket->bind(QHostAddress("127.0.0.1"), 5001);
+    m_socket->bind(QHostAddress::LocalHost, port);
 
     connect(m_socket, &QUdpSocket::readyRead,this, &UdpServer::onReadyRead);
 
-    qDebug() << "Server is listening....";
+    qDebug() << "[+]Server is listening port" << port ;
 }
 
 
@@ -52,7 +52,7 @@ void UdpServer::onReadyRead()
 
                     connect(newClient,&Client::finished,this,&UdpServer::handleFinishedClient);
                     map[mapKey(data.senderAddress(),data.senderPort())] = newClient;
-
+                    QFuture<void> future = QtConcurrent::run(&Client::handle_write, newClient);
                 }else{
                     if(map[mapKey(data.senderAddress(),data.senderPort())] == nullptr){
                         Client *newClient = new Client(name,size,this);

@@ -16,7 +16,7 @@ Client::Client(std::string filename,int apsize,QObject *parent)
     file.setFileName(QString::fromStdString(filename));
 
     if(!file.open(QIODeviceBase::WriteOnly | QIODeviceBase::Truncate)){;
-        qDebug() << "could not open file";
+        qDebug() << "Could not open file";
         exit(EXIT_FAILURE);
     }
 
@@ -102,7 +102,7 @@ void Client::handle_write()
         if(len == last_block){
             repeat_count--;
             if(repeat_count == 0){
-                qDebug() << "File: "<< file.fileName()<<" transfer completed. "<<QThread::currentThread();
+                qDebug() << "File: "<< file.fileName()<<" transfer interrupted. "<<QThread::currentThread();
                 break;
             }
         }else{
